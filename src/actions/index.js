@@ -2,11 +2,13 @@ import _ from 'lodash';
 import jsonPlaceholder from '../apis/jsonPlaceholder';
 
 export const fetchPostsAndUsers = () => {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
         // Waits for response to get data in fetchPosts from JSON before running
-        console.log('About to fetch posts');
         await dispatch(fetchPosts());
-        console.log('Successfully fetched posts');
+    
+        // userIds represents an array of posts with unique user IDs
+        const userIds = _.uniq(_.map(getState().posts, 'userId'));
+        userIds.forEach(id => dispatch(fetchUser(id)));
     }
 }
 
